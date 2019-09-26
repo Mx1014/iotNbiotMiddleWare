@@ -1,0 +1,86 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.usr.middleware.dao.TaskDao">
+
+
+    <sql id="nowDate">
+        unix_timestamp(now())
+    </sql>
+
+    <delete id="deleteByDevIdAndDataId">
+      DELETE FROM
+           iot_task_queue
+      WHERE
+          did = #{devId} AND dataId = #{dataId} AND state = 1;
+   </delete>
+
+    <insert id="addTask" parameterType="Task">
+       INSERT INTO iot_task_queue
+          (did,dataId,data,state,create_time,complet_time,update_time)
+       VALUES
+          (#{task.devId},#{task.dataId},#{task.data},#{task.state},#{task.createTime},#{task.completeTime},#{task.updateTime})
+   </insert>
+
+
+    <insert id="addTaskByIotTaskQueue" parameterType="cn.usr.middleware.pojo.IotTaskQueueDTO">
+        INSERT INTO iot_task_queue
+        (did,data,state,create_time,complet_time,update_time)
+        VALUES
+        (#{iotTaskQueue.did},#{iotTaskQueue.data},#{iotTaskQueue.state},
+        <include refid="nowDate"/>,
+        <include refid="nowDate"/>,
+        <include refid="nowDate"/>)
+    </insert>
+
+
+    <update id="updateState">
+      UPDATE
+          iot_task_queue
+      SET
+          state = 2,update_time = #{time},complet_time=#{time}
+      WHERE
+          did = #{devId} AND dataId = #{dataId} AND state = 1;
+   </update>
+
+
+    <update id="updateTaskState">
+        UPDATE
+        iot_task_queue
+        SET
+        state = #{state},
+        update_time =<include refid="nowDate"/>,
+        complet_time=
+        <include refid="nowDate"/>
+        WHERE
+        did = #{devId}
+        AND
+        commandid = #{commandId}
+    </update>
+
+
+	<select id="getTaskByDeviceId" resultType="Task">
+		SELECT 
+			id, did as devId, data
+		FROM 
+			iot_task_queue
+		WHERE 
+			did = #{devId} and state = 1
+		order by 
+			create_time desc limit 1
+	</select>
+	
+	<update id="updateStateByIdOrDevId" parameterType="Task">
+      UPDATE
+          iot_task_queue
+      SET
+          state = #{state},update_time = #{updateTime},complet_time=#{completeTime}
+      <where>
+	    <if test="id != null and id != 0">id = #{id}</if>
+		<if test="devId != null">did = #{devId}</if>
+		and state = 1
+	  </where>
+   </update>
+   
+
+</mapper>

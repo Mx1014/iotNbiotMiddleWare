@@ -1,0 +1,7 @@
+.idea/*
+*.iml
+target/*
+!*.jar
+log/*
+
+target/cloud_nb_middleware-0.0.1-SNAPSHOT.jar

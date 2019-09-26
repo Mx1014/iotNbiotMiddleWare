@@ -1,0 +1,89 @@
+################################
+# 通讯服务器基本配置属性，不允许频繁替换
+# 修改此处参数对应的为电信云平台 北向推送配置信息，如果修改请删除北向配置（建议删除应用直接新建）。
+# ip 必须外网地址
+################################
+server:
+  port: 8882
+  domainname: 47.101.189.88
+  servlet:
+    context-path: /coap
+  max-http-header-size: 8000
+
+################################
+# rabbitmq 配置信息
+################################
+mq:
+  address: 172.19.15.26
+  port: 5672
+  userName: cloudapi
+  password: cloudapicloudapi
+  exchange:
+    chinatelcom: exchange_chinatelcom_coap_center
+    exchange_cache: exchange_cache_notice_api_fanout
+  queue:
+    coap_cneter: chinatelcom_coap_to_center
+    center_coap: center_to_chinatelcom_coap
+    nb_cache: NBUpdateCache
+  routingkey:
+    offline: offline
+    online: online
+    cache_device: key_cache_notice_api_fanout_device
+    to_center_data: to_center_data
+    to_device_data: to_device_data
+
+################################
+# 电信云基本属性信息
+################################
+portal:
+  appid: J8nPLOrGb_EmEEV0q9ztNvwhXfIa
+  secret: jkGqmGMWufZfGic9fuprMXNh7P8a
+  ip: device.api.ct10649.com
+  port: 8743
+  autosubscribe: false
+
+################################
+# 有人云数据库属性
+# redis 使用和API相同服务器
+################################
+spring:
+  redis:
+    database: 9
+    host: 47.103.54.12
+    port: 6379
+    password: tVfFAQh4
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1
+        min-idle: 0
+    timeout: 3000
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://47.101.174.113/newcloud?characterEncoding=UTF-8
+    username: cloud1
+    password: Cloud123!@#
+mybatis:
+  typeAliasesPackage: cn.usr.middleware.entity
+  mapperLocations: classpath:mapper/*.xml
+
+################################
+# 内置属性信息
+################################
+cn:
+  usr:
+    commandname: DEVICE_RECEIVE
+    serviceid: TransParent
+    general_value: VALUE
+    device_respose_callbackurl: http://${server.domainname}:${server.port}${server.servlet.context-path}/subscribe/CallbackDeviceResponse/
+    device_datachange_callbackurl: http://${server.domainname}:${server.port}${server.servlet.context-path}/subscribe/CallbackDataChange/
+    device_infochange_callbackurl: http://${server.domainname}:${server.port}${server.servlet.context-path}/subscribe/CallbackDeviceInfoChanged/
+  device:
+    offlineTime: 1000
+    lastActionKey: lastActionTime
+
+
+
+
+

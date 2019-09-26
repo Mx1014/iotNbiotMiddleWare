@@ -1,0 +1,26 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.usr.middleware.dao.DeviceRelationDao">
+
+
+    <select id="selectDevRelationByDeviceId" resultMap="PlatformDeviceRelationMap">
+        select
+         device_imei,platform_device_id,platform_type
+        from iot_coap_platform_device_relation
+        where platform_device_id = #{deviceId}
+    </select>
+
+    <select id="selectDevRelationByIMEI" resultMap="PlatformDeviceRelationMap">
+        select
+         device_imei,platform_device_id,platform_type
+        from iot_coap_platform_device_relation
+        where device_imei = #{imei}
+    </select>
+
+    <resultMap id="PlatformDeviceRelationMap" type="cn.usr.middleware.pojo.PlatformDeviceRelation">
+        <result column="device_imei" property="deviceImei" jdbcType="VARCHAR"/>
+        <result column="platform_device_id" property="platformDeviceId" jdbcType="VARCHAR"/>
+        <result column="platform_type" property="platformType" jdbcType="INTEGER"/>
+    </resultMap>
+</mapper>
